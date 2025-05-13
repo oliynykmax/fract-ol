@@ -6,8 +6,8 @@
 #include <math.h>
 #include <stdlib.h>
 #define EXIT_STR "The parameter is invalid. Available parameters are \"Julia\" and \"Mandelbrot\", you can also pass number as a second parameter, to do some changes to the rendering"
-#define WIDTH 640
-#define HEIGHT 640
+#define SIZE 640
+
 
 typedef struct s_palette
 {
@@ -39,10 +39,11 @@ typedef struct s_fractal
     int                     palette_index;
     int                     smooth;
     int                     palette_len;
-    int                     f_type;
+    char                    *f_type;
 }                               t_fractal;
 
 void            init(t_fractal *f);
-
+void            ft_calc_mandelbrot(t_fractal *f);
+void            ft_calc_julia(t_fractal *f);
 
 #endif
