@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:32:16 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/13 11:54:05 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:07:55 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define INIT_WIDTH   1000
-#define INIT_HEIGHT  1000
+#define INIT_WIDTH   400
+#define INIT_HEIGHT  400
 #define MAX_ITER     100
 
 typedef struct s_fractal
