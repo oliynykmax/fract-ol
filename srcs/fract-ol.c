@@ -2,14 +2,14 @@
 
 #include "../incl/fract-ol.h"
 
-void	is_valid_param(int ac, char **av)
+void is_valid_param(int ac, char** av)
 {
 	if (ac == 2)
 	{
 		if (ft_memcmp(av[1], "Julia", 5) == 0 || ft_memcmp(av[1], "Mandelbrot",
-				10) == 0)
+		                                                   10) == 0)
 		{
-			return ;
+			return;
 		}
 		ft_printf("%s\n", EXIT_STR);
 		exit(EXIT_FAILURE);
@@ -17,9 +17,9 @@ void	is_valid_param(int ac, char **av)
 	if (ac == 3)
 	{
 		if ((ft_memcmp(av[1], "Julia", 5) == 0 || ft_memcmp(av[1], "Mandelbrot",
-					10) == 0) && ft_atoi(av[2]) > 0)
+		                                                    10) == 0) && ft_atoi(av[2]) > 0)
 		{
-			return ;
+			return;
 		}
 		ft_printf("%s\n", EXIT_STR);
 		exit(EXIT_FAILURE);
@@ -28,44 +28,46 @@ void	is_valid_param(int ac, char **av)
 	exit(EXIT_FAILURE);
 }
 
-void	my_scrollhook(double xdelta, double ydelta, void *param)
+void my_scrollhook(double xdelta, double ydelta, void* param)
 {
-	t_fractal	*f;
+	t_fractal* f;
 
+	(void)xdelta;
 	(void)param;
 	f = param;
 	if (ydelta > 0)
 		f->zoom *= 1.1;
 	else if (ydelta < 0)
 		f->zoom /= 1.1;
-	;
-	// Can also detect a mousewheel that goes along the X (e.g: MX Master 3)
-	if (xdelta < 0)
-		ft_printf("Sliiiide to the left!");
-	else if (xdelta > 0)
-		ft_printf("Sliiiide to the right!");
 }
 
-int	get_rgba(int r, int g, int b, int a)
+int get_rgba(int r, int g, int b, int a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void	ft_put_pixel(t_fractal *f)
+void calculate_julia(t_fractal* f)
 {
-	int	color;
+	double x_temp;
+	const double julia_real = -0.4;
+	const double julia_imag = 0.6;
+	double x = f->real;
+	double y = f->imag;
 
-	if (f->i >= f->max_iter)
-		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
-			// Black for points in set
-	else
+	f->i = 0;
+	while (f->i < f->max_iter)
 	{
-		color = get_rgba(43, 104, 50, 255);
-		mlx_put_pixel(f->g_img, f->x, f->y, color);
+		x_temp = x * x - y * y + julia_real;
+		y = 2 * x * y + julia_imag;
+		x = x_temp;
+
+		if ((x * x + y * y) > 4.0)
+			break;
+		f->i++;
 	}
 }
 
-void	ft_draw_fract(t_fractal *f)
+void ft_draw_fract(t_fractal* f)
 {
 	f->y = 0;
 	while (f->y < SIZE)
@@ -73,6 +75,10 @@ void	ft_draw_fract(t_fractal *f)
 		f->x = 0;
 		while (f->x < SIZE)
 		{
+			f->real = (2.0 * f->x - SIZE) / (f->zoom * SIZE) + f->shift_x;
+			f->imag = (2.0 * f->y - SIZE) / (f->zoom * SIZE) + f->shift_y;
+			if (ft_strncmp(f->f_type, "Julia", 5) == 0)
+				calculate_julia(f);
 			ft_put_pixel(f);
 			f->x++;
 		}
@@ -80,9 +86,30 @@ void	ft_draw_fract(t_fractal *f)
 	}
 }
 
-void	ft_loop_hook(void *param)
+void ft_put_pixel(t_fractal* f)
 {
-	t_fractal	*f;
+	int color;
+
+	if (f->i >= f->max_iter)
+	{
+		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
+	}
+	else
+	{
+		// Modified coloring for better visibility
+		double t = (double)f->i / f->max_iter;
+		int r = (int)(9 * t * 255);
+		int g = (int)(15 * t * t * 255);
+		int b = (int)(8.5 * t * t * t * 255);
+		color = get_rgba(r, g, b, 255);
+		mlx_put_pixel(f->g_img, f->x, f->y, color);
+	}
+}
+
+
+void ft_loop_hook(void* param)
+{
+	t_fractal* f;
 
 	f = param;
 	if (mlx_is_key_down(f->mlx, MLX_KEY_ESCAPE))
@@ -107,28 +134,31 @@ void	ft_loop_hook(void *param)
 	ft_draw_fract(f);
 }
 
-void	init_screen(t_fractal *f)
+void init_screen(t_fractal* f)
 {
 	f->mlx = mlx_init(SIZE, SIZE, f->f_type, 0);
 	f->g_img = mlx_new_image(f->mlx, SIZE, SIZE);
 	mlx_image_to_window(f->mlx, f->g_img, 0, 0);
-	// mlx_loop_hook(mlx, &hook_escape, mlx);
 	mlx_loop_hook(f->mlx, &ft_loop_hook, f);
 	mlx_loop(f->mlx);
 	mlx_terminate(f->mlx);
 }
 
-int	main(int ac, char **av)
+int main(int ac, char** av)
 {
-	t_fractal	*f;
+	t_fractal* f;
 
 	f = malloc(sizeof(t_fractal));
 	if (!f)
 		return (EXIT_FAILURE);
 	is_valid_param(ac, av);
 	f->f_type = &(av[1][0]);
-	f->max_iter = 100; // Default max iterations
-	f->zoom = 1;       // Default zoom level
+	f->max_iter = 100;
+	f->zoom = 1.0;
+	f->shift_x = 0.0;
+	f->shift_y = 0.0;
 	init_screen(f);
 	free(f);
+	return (0);
 }
+

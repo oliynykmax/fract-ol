@@ -11,39 +11,55 @@
 
 typedef struct s_palette
 {
-    uint8_t         count;
-    int                     cycle;
-    int                     colors[16];
-}       t_palette;
+    uint8_t count;
+    int cycle;
+    int colors[16];
+} t_palette;
 
+
+// typedef struct s_fractal
+// {
+//     mlx_t           *mlx;
+//     mlx_image_t     *g_img;
+//     double          k;
+//     double          h;
+//     double          z_re;
+//     double          z_im;
+//     double          c_re;
+//     double          c_im;
+//     double          zoom;
+//     double          y;
+//     double          i;
+//     double          x;
+//     double          limx;
+//     double          limy;
+//     double          max_iter;
+//     t_palette       *palette;
+//     t_palette       *palettes;
+//     int                     palette_index;
+//     int                     smooth;
+//     int                     palette_len;
+//     char                    *f_type;
+// }                               t_fractal;
 
 typedef struct s_fractal
 {
-    mlx_t           *mlx;
-    mlx_image_t     *g_img;
-    double          k;
-    double          h;
-    double          z_re;
-    double          z_im;
-    double          c_re;
-    double          c_im;
-    double          zoom;
-    double          y;
-    double          i;
-    double          x;
-    double          limx;
-    double          limy;
-    double          max_iter;
-    t_palette       *palette;
-    t_palette       *palettes;
-    int                     palette_index;
-    int                     smooth;
-    int                     palette_len;
-    char                    *f_type;
-}                               t_fractal;
+    void* mlx;
+    void* g_img;
+    char* f_type;
+    int x;
+    int y;
+    double real;
+    double imag;
+    double zoom;
+    double shift_x; // For panning horizontally
+    double shift_y; // For panning vertically
+    int max_iter;
+    int i;
+} t_fractal;
 
-void            init(t_fractal *f);
-void            ft_calc_mandelbrot(t_fractal *f);
-void            ft_calc_julia(t_fractal *f);
-
+void init(t_fractal* f);
+void ft_calc_mandelbrot(t_fractal* f);
+void ft_calc_julia(t_fractal* f);
+void ft_put_pixel(t_fractal* f);
 #endif
