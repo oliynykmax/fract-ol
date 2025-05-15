@@ -1,0 +1,350 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractal.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 15:11:31 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 17:36:39 by maoliiny         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FRACTAL_H
+# define FRACTAL_H
+
+# include "../assets/MLX42/include/MLX42/MLX42.h"
+# include "../assets/libft/libft.h"
+# include <math.h>
+# include <stdlib.h>
+# define EXIT_STR \
+	"Usage:\n\
+./fractol Mandelbrot\n\
+./fractol Julia\n\
+./fractol Julia <real> <imaginary>\n\
+Example: ./fractol Julia -0.4 0.6"
+# define SIZE 700
+
+typedef struct s_color
+{
+	int		r;
+	int		g;
+	int		b;
+}			t_color;
+
+typedef struct s_fractal
+{
+	void	*mlx;
+	void	*g_img;
+	char	*f_type;
+	int		x;
+	int		y;
+	double	real;
+	double	imag;
+	double	zoom;
+	double	shift_x;
+	double	shift_y;
+	int		max_iter;
+	int		i;
+	double	julia_real;
+	double	julia_imag;
+	int		color_scheme;
+}			t_fractal;
+
+void		init(t_fractal *f);
+void		ft_put_pixel(t_fractal *f);
+void		apply_color_scheme(t_fractal *f, double t, int *color);
+void		switch_color_scheme(t_fractal *f);
+int			get_rgba(int r, int g, int b, int a);
+void		apply_color_scheme(t_fractal *f, double t, int *color);
+/*utils*/
+void		is_valid_param(int ac, char **av, t_fractal *f);
+void		print_exit_clean(t_fractal *f);
+void		ft_put_pixel(t_fractal *f);
+void		calculate_julia(t_fractal *f);
+void		calculate_mandelbrot(t_fractal *f);
+
+#endif
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 17:32:10 by maoliiny         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../incl/fractal.h"
+
+int	get_rgba(int r, int g, int b, int a)
+{
+	return (r << 24 | g << 16 | b << 8 | a);
+}
+
+static void	classic_scheme(double t, int *r, int *g, int *b)
+{
+	*r = (int)(9 * (1 - t) * t * t * t * 255);
+	*g = (int)(15 * (1 - t) * (1 - t) * t * t * 255);
+	*b = (int)(8.5 * (1 - t) * t * t * 255);
+}
+
+static void	fire_scheme(double t, int *r, int *g, int *b)
+{
+	*r = (int)(255 * t);
+	*g = (int)(128 * t * t);
+	*b = (int)(32 * t * t * t);
+}
+
+static void	psychedelic_scheme(double t, int *r, int *g, int *b)
+{
+	*r = (int)(255 * sin(2 * M_PI * t));
+	*g = (int)(255 * sin(2 * M_PI * t + 2 * M_PI / 3));
+	*b = (int)(255 * sin(2 * M_PI * t + 4 * M_PI / 3));
+}
+
+void	apply_color_scheme(t_fractal *f, double t, int *color)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	t = fmin(fmax(t, 0.0), 1.0);
+	if (f->color_scheme == 1)
+		fire_scheme(t, &r, &g, &b);
+	else if (f->color_scheme == 2)
+		psychedelic_scheme(t, &r, &g, &b);
+	else
+		classic_scheme(t, &r, &g, &b);
+	r = (int)fmin(fmax(r, 0.0), 255.0);
+	g = (int)fmin(fmax(g, 0.0), 255.0);
+	b = (int)fmin(fmax(b, 0.0), 255.0);
+	*color = get_rgba(r, g, b, 255);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractal.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 18:07:26 by maoliiny         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../incl/fractal.h"
+
+void	my_scrollhook(double xdelta, double ydelta, void *param)
+{
+	t_fractal	*f;
+
+	(void)xdelta;
+	(void)param;
+	f = param;
+	if (ydelta > 0)
+		f->zoom *= 1.04;
+	else if (ydelta < 0)
+		f->zoom /= 1.04;
+}
+
+void	ft_draw_fract(t_fractal *f)
+{
+	f->y = 0;
+	while (f->y < SIZE)
+	{
+		f->x = 0;
+		while (f->x < SIZE)
+		{
+			f->real = (2.0 * f->x - SIZE) / (f->zoom * SIZE) + f->shift_x;
+			f->imag = (2.0 * f->y - SIZE) / (f->zoom * SIZE) + f->shift_y;
+			if (ft_strncmp(f->f_type, "Julia", 5) == 0)
+				calculate_julia(f);
+			else if (ft_strncmp(f->f_type, "Mandelbrot", 10) == 0)
+				calculate_mandelbrot(f);
+			ft_put_pixel(f);
+			f->x++;
+		}
+		f->y++;
+	}
+}
+
+void	move(int key, t_fractal *f)
+{
+	double	move_speed;
+
+	move_speed = 0.05 / f->zoom;
+	if (key == MLX_KEY_LEFT)
+		f->shift_x -= move_speed;
+	if (key == MLX_KEY_RIGHT)
+		f->shift_x += move_speed;
+	if (key == MLX_KEY_UP)
+		f->shift_y -= move_speed;
+	if (key == MLX_KEY_DOWN)
+		f->shift_y += move_speed;
+}
+
+void	ft_loop_hook(void *param)
+{
+	t_fractal	*f;
+
+	f = param;
+	if (mlx_is_key_down(f->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(f->mlx);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_I))
+		f->max_iter = (f->max_iter * 1.1) + 1;
+	if (mlx_is_key_down(f->mlx, MLX_KEY_D))
+		f->max_iter /= 1.1;
+	if (mlx_is_key_down(f->mlx, MLX_KEY_DOWN))
+		move(MLX_KEY_DOWN, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_UP))
+		move(MLX_KEY_UP, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_RIGHT))
+		move(MLX_KEY_RIGHT, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_LEFT))
+		move(MLX_KEY_LEFT, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_C))
+		f->color_scheme = (f->color_scheme + 1) % 3;
+	mlx_scroll_hook(f->mlx, &my_scrollhook, f);
+	ft_draw_fract(f);
+}
+
+void	init_screen(t_fractal *f)
+{
+	f->mlx = mlx_init(SIZE, SIZE, f->f_type, 0);
+	f->g_img = mlx_new_image(f->mlx, SIZE, SIZE);
+	mlx_image_to_window(f->mlx, f->g_img, 0, 0);
+	mlx_loop_hook(f->mlx, &ft_loop_hook, f);
+	mlx_loop(f->mlx);
+	mlx_terminate(f->mlx);
+}
+
+int	main(int ac, char **av)
+{
+	t_fractal	*f;
+
+	f = malloc(sizeof(t_fractal));
+	if (!f)
+		return (EXIT_FAILURE);
+	is_valid_param(ac, av, f);
+	f->f_type = &(av[1][0]);
+	f->max_iter = 100;
+	f->zoom = 1.0;
+	f->shift_x = 0.0;
+	f->shift_y = 0.0;
+	f->color_scheme = 0;
+	init_screen(f);
+	free(f);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 17:17:52 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 18:04:35 by maoliiny         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../incl/fractal.h"
+
+void	print_exit_clean(t_fractal *f)
+{
+	free(f);
+	ft_printf("%s\n", EXIT_STR);
+	exit(EXIT_FAILURE);
+}
+
+void	is_valid_param(int ac, char **av, t_fractal *f)
+{
+	char	*end_ptr;
+
+	if (ac == 2)
+	{
+		if (ft_memcmp(av[1], "Mandelbrot", 10) == 0)
+			return ;
+		if (ft_memcmp(av[1], "Julia", 5) == 0)
+		{
+			f->julia_real = -0.4;
+			f->julia_imag = 0.6;
+			return ;
+		}
+		print_exit_clean(f);
+	}
+	if (ac == 4 && ft_memcmp(av[1], "Julia", 5) == 0)
+	{
+		f->julia_real = ft_strtod(av[2], &end_ptr);
+		if (*end_ptr != '\0')
+			print_exit_clean(f);
+		f->julia_imag = ft_strtod(av[3], &end_ptr);
+		if (*end_ptr != '\0')
+			print_exit_clean(f);
+		return ;
+	}
+	print_exit_clean(f);
+}
+
+void	ft_put_pixel(t_fractal *f)
+{
+	int		color;
+	double	t;
+
+	if (f->i >= f->max_iter)
+		mlx_put_pixel(f->g_img, f->x, f->y, 0x1F1013FF);
+	else
+	{
+		t = (double)f->i / f->max_iter;
+		apply_color_scheme(f, t, &color);
+		mlx_put_pixel(f->g_img, f->x, f->y, color);
+	}
+}
+
+void	calculate_julia(t_fractal *f)
+{
+	double	x;
+	double	y;
+	double	temp;
+
+	x = (f->x - SIZE / 2.0) * f->zoom / SIZE + f->shift_x;
+	y = (f->y - SIZE / 2.0) * f->zoom / SIZE + f->shift_y;
+	f->i = 0;
+	while (x * x + y * y < (1 << 8) && f->i < f->max_iter)
+	{
+		temp = x * x - y * y + f->julia_real;
+		y = 2.0 * x * y + f->julia_imag;
+		if (x == temp && y == y)
+		{
+			f->i = f->max_iter;
+			break ;
+		}
+		x = temp;
+		f->i++;
+	}
+}
+
+void	calculate_mandelbrot(t_fractal *f)
+{
+	double			x_temp;
+	const double	c_real = f->real;
+	const double	c_imag = f->imag;
+	double			x;
+	double			y;
+
+	x = 0.0;
+	y = 0.0;
+	f->i = 0;
+	while (f->i < f->max_iter)
+	{
+		x_temp = x * x - y * y + c_real;
+		y = 2 * x * y + c_imag;
+		x = x_temp;
+		if ((x * x + y * y) > 4.0)
+			break ;
+		f->i++;
+	}
+}

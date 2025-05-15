@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fract-ol.c                                         :+:      :+:    :+:   */
+/*   fractal.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 17:55:02 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:17:46 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	is_valid_param(ac, av, f);
 	f->f_type = &(av[1][0]);
-	f->max_iter = 100;
-	f->zoom = 1.0;
+	f->max_iter = 35;
+	f->zoom = 3.5;
 	f->shift_x = 0.0;
 	f->shift_y = 0.0;
 	f->color_scheme = 0;
