@@ -6,7 +6,7 @@
 #    By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 19:29:32 by maoliiny          #+#    #+#              #
-#    Updated: 2025/05/15 14:28:31 by maoliiny         ###   ########.fr        #
+#    Updated: 2025/05/15 16:14:13 by maoliiny         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME = fract-ol
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = srcs/fract-ol.c
+SRCS = srcs/fract-ol.c srcs/colors.c
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -Iincl -Iassets/libft -Iassets/MLX42/include

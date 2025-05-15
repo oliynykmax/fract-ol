@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:11:31 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 15:13:06 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:36:48 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@
 Example: ./fractol Julia -0.4 0.6"
 # define SIZE 500
 
-typedef struct s_palette
+typedef struct s_color
 {
-	uint8_t	count;
-	int		cycle;
-	int		colors[16];
-}			t_palette;
+	int		r;
+	int		g;
+	int		b;
+}			t_color;
 
 typedef struct s_fractal
 {
@@ -48,11 +48,17 @@ typedef struct s_fractal
 	int		i;
 	double	julia_real;
 	double	julia_imag;
+	int		color_scheme;
 }			t_fractal;
 
 void		init(t_fractal *f);
 void		ft_calc_mandelbrot(t_fractal *f);
 void		ft_calc_julia(t_fractal *f);
 void		ft_put_pixel(t_fractal *f);
+void		apply_color_scheme(t_fractal *f, double t, int *color);
+void		switch_color_scheme(t_fractal *f);
+void		toggle_smooth_coloring(t_fractal *f);
+int			get_rgba(int r, int g, int b, int a);
+void		apply_color_scheme(t_fractal *f, double t, int *color);
 
 #endif

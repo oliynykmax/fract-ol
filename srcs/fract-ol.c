@@ -6,11 +6,18 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 15:11:04 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:37:25 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/fract-ol.h"
+
+void	print_exit_clean(t_fractal *f)
+{
+	free(f);
+	ft_printf("%s\n", EXIT_STR);
+	exit(EXIT_FAILURE);
+}
 
 void	is_valid_param(int ac, char **av, t_fractal *f)
 {
@@ -26,31 +33,19 @@ void	is_valid_param(int ac, char **av, t_fractal *f)
 			f->julia_imag = 0.6;
 			return ;
 		}
-		free(f);
-		ft_printf("%s\n", EXIT_STR);
-		exit(EXIT_FAILURE);
+		print_exit_clean(f);
 	}
 	if (ac == 4 && ft_memcmp(av[1], "Julia", 5) == 0)
 	{
 		f->julia_real = strtod(av[2], &end_ptr);
 		if (*end_ptr != '\0')
-		{
-			ft_printf("Invalid real parameter for Julia set\n");
-			free(f);
-			exit(EXIT_FAILURE);
-		}
+			print_exit_clean(f);
 		f->julia_imag = strtod(av[3], &end_ptr);
 		if (*end_ptr != '\0')
-		{
-			free(f);
-			ft_printf("Invalid imaginary parameter for Julia set\n");
-			exit(EXIT_FAILURE);
-		}
+			print_exit_clean(f);
 		return ;
 	}
-	ft_printf("%s\n", EXIT_STR);
-	free(f);
-	exit(EXIT_FAILURE);
+	print_exit_clean(f);
 }
 
 void	my_scrollhook(double xdelta, double ydelta, void *param)
@@ -138,19 +133,13 @@ void	ft_put_pixel(t_fractal *f)
 {
 	int		color;
 	double	t;
-	int		r;
-	int		g;
-	int		b;
 
 	if (f->i >= f->max_iter)
 		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
 	else
 	{
 		t = (double)f->i / f->max_iter;
-		r = (int)(9 * t * 255);
-		g = (int)(15 * t * t * 255);
-		b = (int)(8.5 * t * t * t * 255);
-		color = get_rgba(r, g, b, 255);
+		apply_color_scheme(f, t, &color);
 		mlx_put_pixel(f->g_img, f->x, f->y, color);
 	}
 }
@@ -181,10 +170,6 @@ void	ft_loop_hook(void *param)
 		f->max_iter = (f->max_iter * 1.1) + 1;
 	if (mlx_is_key_down(f->mlx, MLX_KEY_D))
 		f->max_iter /= 1.1;
-	if (mlx_is_key_down(f->mlx, MLX_KEY_Z))
-		f->zoom *= 1.03;
-	if (mlx_is_key_down(f->mlx, MLX_KEY_X))
-		f->zoom /= 1.03;
 	if (mlx_is_key_down(f->mlx, MLX_KEY_DOWN))
 		move(MLX_KEY_DOWN, f);
 	if (mlx_is_key_down(f->mlx, MLX_KEY_UP))
@@ -193,10 +178,8 @@ void	ft_loop_hook(void *param)
 		move(MLX_KEY_RIGHT, f);
 	if (mlx_is_key_down(f->mlx, MLX_KEY_LEFT))
 		move(MLX_KEY_LEFT, f);
-	if (mlx_is_key_down(f->mlx, MLX_KEY_R))
-		f->max_iter += 10;
-	if (mlx_is_key_down(f->mlx, MLX_KEY_F))
-		f->max_iter -= 10;
+	if (mlx_is_key_down(f->mlx, MLX_KEY_C))
+		f->color_scheme = (f->color_scheme + 1) % 5;
 	mlx_scroll_hook(f->mlx, &my_scrollhook, f);
 	ft_draw_fract(f);
 }
@@ -224,6 +207,7 @@ int	main(int ac, char **av)
 	f->zoom = 1.0;
 	f->shift_x = 0.0;
 	f->shift_y = 0.0;
+	f->color_scheme = 0;
 	init_screen(f);
 	free(f);
 	return (0);
