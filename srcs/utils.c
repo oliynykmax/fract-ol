@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:17:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 18:40:10 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:46:25 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_put_pixel(t_fractal *f)
 	double	t;
 
 	if (f->i >= f->max_iter)
-		mlx_put_pixel(f->g_img, f->x, f->y, 0x1F1013FF);
+		mlx_put_pixel(f->g_img, f->x, f->y, 0x1A1A3AFF);
 	else
 	{
 		t = (double)f->i / f->max_iter;

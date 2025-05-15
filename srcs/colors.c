@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 17:32:10 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:49:00 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,23 @@ int	get_rgba(int r, int g, int b, int a)
 
 static void	classic_scheme(double t, int *r, int *g, int *b)
 {
-	*r = (int)(9 * (1 - t) * t * t * t * 255);
-	*g = (int)(15 * (1 - t) * (1 - t) * t * t * 255);
-	*b = (int)(8.5 * (1 - t) * t * t * 255);
+	*r = (int)(255 * t * t);
+	*g = (int)(255 * pow(1 - t, 2) * t);
+	*b = (int)(255 * (1 - t * t));
 }
 
 static void	fire_scheme(double t, int *r, int *g, int *b)
 {
-	*r = (int)(255 * t);
-	*g = (int)(128 * t * t);
-	*b = (int)(32 * t * t * t);
+	*r = (int)(255 * (1 - (1 - t) * (1 - t)));
+	*g = (int)(255 * t * t * (1 - t));
+	*b = (int)(255 * pow(t, 4));
 }
 
 static void	psychedelic_scheme(double t, int *r, int *g, int *b)
 {
-	*r = (int)(255 * sin(2 * M_PI * t));
-	*g = (int)(255 * sin(2 * M_PI * t + 2 * M_PI / 3));
-	*b = (int)(255 * sin(2 * M_PI * t + 4 * M_PI / 3));
+	*r = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t)));
+	*g = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t + 2.094)));
+	*b = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t + 4.188)));
 }
 
 void	apply_color_scheme(t_fractal *f, double t, int *color)
