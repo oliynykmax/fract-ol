@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:11:31 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 17:36:39 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:13:10 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,10 @@ void		print_exit_clean(t_fractal *f);
 void		ft_put_pixel(t_fractal *f);
 void		calculate_julia(t_fractal *f);
 void		calculate_mandelbrot(t_fractal *f);
+
+void		ft_loop_hook(void *param);
+void		my_scrollhook(double xdelta, double ydelta, void *param);
+void		ft_draw_fract(t_fractal *f);
+void		move(int key, t_fractal *f);
 
 #endif
