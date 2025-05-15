@@ -5,8 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+<<<<<<< HEAD
 /*   Created: 2025/05/15 12:30:27 by maoliiny          #+#    #+#             */
 /*   Updated: 2025/05/15 12:30:35 by maoliiny         ###   LAUSANNE.ch       */
+=======
+/*   Created: 2025/05/15 12:50:16 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 13:03:11 by maoliiny         ###   ########.fr       */
+>>>>>>> 58c4d2f (works Julia or whatever)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +111,13 @@ void	ft_put_pixel(t_fractal *f)
 	int		b;
 
 	if (f->i >= f->max_iter)
-	{
 		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
-	}
 	else
 	{
+<<<<<<< HEAD
 		// Modified coloring for better visibility
+=======
+>>>>>>> 58c4d2f (works Julia or whatever)
 		t = (double)f->i / f->max_iter;
 		r = (int)(9 * t * 255);
 		g = (int)(15 * t * t * 255);
@@ -121,8 +127,28 @@ void	ft_put_pixel(t_fractal *f)
 	}
 }
 
+<<<<<<< HEAD
 void	ft_loop_hook(void *param)
 {
+=======
+void	move(int key, t_fractal *f)
+{
+	double	move_speed;
+
+	move_speed = 0.05 / f->zoom;
+	if (key == MLX_KEY_LEFT)
+		f->shift_x -= move_speed;
+	if (key == MLX_KEY_RIGHT)
+		f->shift_x += move_speed;
+	if (key == MLX_KEY_UP)
+		f->shift_y -= move_speed;
+	if (key == MLX_KEY_DOWN)
+		f->shift_y += move_speed;
+}
+
+void	ft_loop_hook(void *param)
+{
+>>>>>>> 58c4d2f (works Julia or whatever)
 	t_fractal	*f;
 
 	f = param;
@@ -136,14 +162,21 @@ void	ft_loop_hook(void *param)
 		f->zoom *= 1.1;
 	if (mlx_is_key_down(f->mlx, MLX_KEY_X))
 		f->zoom /= 1.1;
-	// if (mlx_is_key_down(f->mlx, MLX_KEY_DOWN))
-	// 	move(MLX_KEY_DOWN, f);
-	// if (mlx_is_key_down(f->mlx, MLX_KEY_UP))
-	// 	move(MLX_KEY_UP, f);
-	// if (mlx_is_key_down(f->mlx, MLX_KEY_RIGHT))
-	// 	move(MLX_KEY_RIGHT, f);
-	// if (mlx_is_key_down(f->mlx, MLX_KEY_LEFT))
-	// 	move(MLX_KEY_LEFT, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_DOWN))
+		move(MLX_KEY_DOWN, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_UP))
+		move(MLX_KEY_UP, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_RIGHT))
+		move(MLX_KEY_RIGHT, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_LEFT))
+		move(MLX_KEY_LEFT, f);
+	if (mlx_is_key_down(f->mlx, MLX_KEY_R))
+		f->max_iter += 10;
+	if (mlx_is_key_down(f->mlx, MLX_KEY_F))
+	{
+		f->max_iter -= 10;
+		ft_printf("%i", f->max_iter);
+	}
 	mlx_scroll_hook(f->mlx, &my_scrollhook, f);
 	ft_draw_fract(f);
 }
@@ -167,7 +200,7 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	is_valid_param(ac, av);
 	f->f_type = &(av[1][0]);
-	f->max_iter = 100;
+	f->max_iter = 30;
 	f->zoom = 1.0;
 	f->shift_x = 0.0;
 	f->shift_y = 0.0;

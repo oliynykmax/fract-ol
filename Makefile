@@ -6,7 +6,7 @@
 #    By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 19:29:32 by maoliiny          #+#    #+#              #
-#    Updated: 2025/05/12 11:23:24 by maoliiny         ###   ########.fr        #
+#    Updated: 2025/05/15 12:41:36 by maoliiny         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRCS = srcs/fract-ol.c
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -Iincl -Iassets/libft
-MLX42 = assets/MLX42/libmlx42.a
+MLX42 = assets/MLX42/build/libmlx42.a
 
 all: $(NAME)
 
