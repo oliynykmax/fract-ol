@@ -6,7 +6,7 @@
 #include <math.h>
 #include <stdlib.h>
 #define EXIT_STR "The parameter is invalid. Available parameters are \"Julia\" and \"Mandelbrot\", you can also pass number as a second parameter, to do some changes to the rendering"
-#define SIZE 640
+#define SIZE 500
 
 
 typedef struct s_palette

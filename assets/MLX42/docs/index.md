@@ -5,7 +5,7 @@ See copyright and license notice in the root project for more information.
 
 </br>
 <div align="center">
-  <img src="assets/logo.png" alt="42MLX_Logo">
+  <img src="./assets/logo.png" alt="42MLX_Logo">
 </div>
 <div align="center" style="margin-top: 8px;">
   <sub>Written by <a href="https://portfolio.w2wizard.dev/">W2.Wizard</a> for the 42 Network</sub>
@@ -29,15 +29,15 @@ displaying images from disk or creating a drawing surface to draw pixels on.
 
 ## Toc
 
-* [Basics](Basics.md)
-* [Colors](Colors.md)
-* [Functions](Functions.md)
-* [Hooks](Hooks.md)
-* [Images](Images.md)
-* [Input](Input.md)
-* [Shaders](Shaders.md)
-* [Textures](Textures.md)
-* [XPM42](XPM42.md)
+* [Basics](./Basics.md)
+* [Colors](./Colors.md)
+* [Functions](./Functions.md)
+* [Hooks](./Hooks.md)
+* [Images](./Images.md)
+* [Input](./Input.md)
+* [Shaders](./Shaders.md)
+* [Textures](./Textures.md)
+* [XPM42](./XPM42.md)
 
 ---
 

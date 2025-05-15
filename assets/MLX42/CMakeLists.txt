@@ -11,10 +11,10 @@ message(STATUS "MLX42 @ ${CMAKE_PROJECT_VERSION}")
 
 # Variables
 # -----------------------------------------------------------------------------
-set(SOURCE_DIR src)
-set(TOOLS_DIR tools)
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(TOOLS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set(CMAKE_DIR cmake)
+set(CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -126,13 +126,13 @@ add_library(mlx42 STATIC
 	${SOURCE_DIR}/textures/mlx_xpm42.c
 
 	# Libs
-        lib/png/lodepng.c
-        lib/glad/glad.c
+	lib/png/lodepng.c
+	lib/glad/glad.c
 
 	mlx_vert_shader.c
 	mlx_frag_shader.c
 )
-target_include_directories(mlx42 PUBLIC include)
+target_include_directories(mlx42 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Dependencies
 # -----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ endif()
 # ambitions to use this for anything other than your own school projects.
 
 install(
-	DIRECTORY include/MLX42 DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+	DIRECTORY ./include/MLX42 DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 	FILES_MATCHING PATTERN MLX42.h
 )
 

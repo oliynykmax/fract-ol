@@ -1,15 +1,25 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fract-ol.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 12:30:27 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 12:30:35 by maoliiny         ###   LAUSANNE.ch       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../incl/fract-ol.h"
 
-void is_valid_param(int ac, char** av)
+void	is_valid_param(int ac, char **av)
 {
 	if (ac == 2)
 	{
 		if (ft_memcmp(av[1], "Julia", 5) == 0 || ft_memcmp(av[1], "Mandelbrot",
-		                                                   10) == 0)
+				10) == 0)
 		{
-			return;
+			return ;
 		}
 		ft_printf("%s\n", EXIT_STR);
 		exit(EXIT_FAILURE);
@@ -17,9 +27,9 @@ void is_valid_param(int ac, char** av)
 	if (ac == 3)
 	{
 		if ((ft_memcmp(av[1], "Julia", 5) == 0 || ft_memcmp(av[1], "Mandelbrot",
-		                                                    10) == 0) && ft_atoi(av[2]) > 0)
+					10) == 0) && ft_atoi(av[2]) > 0)
 		{
-			return;
+			return ;
 		}
 		ft_printf("%s\n", EXIT_STR);
 		exit(EXIT_FAILURE);
@@ -28,9 +38,9 @@ void is_valid_param(int ac, char** av)
 	exit(EXIT_FAILURE);
 }
 
-void my_scrollhook(double xdelta, double ydelta, void* param)
+void	my_scrollhook(double xdelta, double ydelta, void *param)
 {
-	t_fractal* f;
+	t_fractal	*f;
 
 	(void)xdelta;
 	(void)param;
@@ -41,33 +51,34 @@ void my_scrollhook(double xdelta, double ydelta, void* param)
 		f->zoom /= 1.1;
 }
 
-int get_rgba(int r, int g, int b, int a)
+int	get_rgba(int r, int g, int b, int a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void calculate_julia(t_fractal* f)
+void	calculate_julia(t_fractal *f)
 {
-	double x_temp;
-	const double julia_real = -0.4;
-	const double julia_imag = 0.6;
-	double x = f->real;
-	double y = f->imag;
+	double			x_temp;
+	const double	julia_real = -0.4;
+	const double	julia_imag = 0.6;
+	double			x;
+	double			y;
 
+	x = f->real;
+	y = f->imag;
 	f->i = 0;
 	while (f->i < f->max_iter)
 	{
 		x_temp = x * x - y * y + julia_real;
 		y = 2 * x * y + julia_imag;
 		x = x_temp;
-
 		if ((x * x + y * y) > 4.0)
-			break;
+			break ;
 		f->i++;
 	}
 }
 
-void ft_draw_fract(t_fractal* f)
+void	ft_draw_fract(t_fractal *f)
 {
 	f->y = 0;
 	while (f->y < SIZE)
@@ -86,9 +97,13 @@ void ft_draw_fract(t_fractal* f)
 	}
 }
 
-void ft_put_pixel(t_fractal* f)
+void	ft_put_pixel(t_fractal *f)
 {
-	int color;
+	int		color;
+	double	t;
+	int		r;
+	int		g;
+	int		b;
 
 	if (f->i >= f->max_iter)
 	{
@@ -97,19 +112,18 @@ void ft_put_pixel(t_fractal* f)
 	else
 	{
 		// Modified coloring for better visibility
-		double t = (double)f->i / f->max_iter;
-		int r = (int)(9 * t * 255);
-		int g = (int)(15 * t * t * 255);
-		int b = (int)(8.5 * t * t * t * 255);
+		t = (double)f->i / f->max_iter;
+		r = (int)(9 * t * 255);
+		g = (int)(15 * t * t * 255);
+		b = (int)(8.5 * t * t * t * 255);
 		color = get_rgba(r, g, b, 255);
 		mlx_put_pixel(f->g_img, f->x, f->y, color);
 	}
 }
 
-
-void ft_loop_hook(void* param)
+void	ft_loop_hook(void *param)
 {
-	t_fractal* f;
+	t_fractal	*f;
 
 	f = param;
 	if (mlx_is_key_down(f->mlx, MLX_KEY_ESCAPE))
@@ -134,7 +148,7 @@ void ft_loop_hook(void* param)
 	ft_draw_fract(f);
 }
 
-void init_screen(t_fractal* f)
+void	init_screen(t_fractal *f)
 {
 	f->mlx = mlx_init(SIZE, SIZE, f->f_type, 0);
 	f->g_img = mlx_new_image(f->mlx, SIZE, SIZE);
@@ -144,9 +158,9 @@ void init_screen(t_fractal* f)
 	mlx_terminate(f->mlx);
 }
 
-int main(int ac, char** av)
+int	main(int ac, char **av)
 {
-	t_fractal* f;
+	t_fractal	*f;
 
 	f = malloc(sizeof(t_fractal));
 	if (!f)
@@ -161,4 +175,3 @@ int main(int ac, char** av)
 	free(f);
 	return (0);
 }
-
