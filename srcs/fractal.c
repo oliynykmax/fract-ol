@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 18:17:46 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:43:07 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,22 @@
 void	my_scrollhook(double xdelta, double ydelta, void *param)
 {
 	t_fractal	*f;
+	double		mouse_re;
+	double		mouse_im;
+	int32_t		x;
+	int32_t		y;
 
 	(void)xdelta;
-	(void)param;
 	f = param;
+	mlx_get_mouse_pos(f->mlx, &x, &y);
+	mouse_re = (x - SIZE / 2.0) / (f->zoom * SIZE / 2.0) + f->shift_x;
+	mouse_im = (y - SIZE / 2.0) / (f->zoom * SIZE / 2.0) + f->shift_y;
 	if (ydelta > 0)
-		f->zoom *= 1.04;
-	else if (ydelta < 0)
-		f->zoom /= 1.04;
+		f->zoom *= 1.1;
+	else
+		f->zoom /= 1.1;
+	f->shift_x = mouse_re - (x - SIZE / 2.0) / (f->zoom * SIZE / 2.0);
+	f->shift_y = mouse_im - (y - SIZE / 2.0) / (f->zoom * SIZE / 2.0);
 }
 
 void	ft_draw_fract(t_fractal *f)
@@ -106,7 +114,7 @@ int	main(int ac, char **av)
 	is_valid_param(ac, av, f);
 	f->f_type = &(av[1][0]);
 	f->max_iter = 35;
-	f->zoom = 3.5;
+	f->zoom = 0.5;
 	f->shift_x = 0.0;
 	f->shift_y = 0.0;
 	f->color_scheme = 0;

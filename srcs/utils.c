@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:17:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 18:19:20 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:40:10 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	is_valid_param(int ac, char **av, t_fractal *f)
 			return ;
 		if (ft_memcmp(av[1], "Julia", 5) == 0)
 		{
-			f->julia_real = -0.4;
-			f->julia_imag = 0.6;
+			f->julia_real = -0.2;
+			f->julia_imag = 0.652;
 			return ;
 		}
 		print_exit_clean(f);
@@ -69,18 +69,13 @@ void	calculate_julia(t_fractal *f)
 	double	y;
 	double	temp;
 
-	x = (f->x - SIZE / 2.0) * f->zoom / SIZE + f->shift_x;
-	y = (f->y - SIZE / 2.0) * f->zoom / SIZE + f->shift_y;
+	x = f->real;
+	y = f->imag;
 	f->i = 0;
 	while (x * x + y * y < (1 << 8) && f->i < f->max_iter)
 	{
-		temp = x * x - y * y + f->julia_real;
-		y = 2.0 * x * y + f->julia_imag;
-		if (x == temp && y == y)
-		{
-			f->i = f->max_iter;
-			break ;
-		}
+		temp = x * x - y * y + sin(f->julia_real);
+		y = 2.0 * x * y + cos(f->julia_imag);
 		x = temp;
 		f->i++;
 	}
@@ -90,26 +85,22 @@ void	calculate_mandelbrot(t_fractal *f)
 {
 	double	x;
 	double	y;
-	double	temp;
-	double	c_real;
-	double	c_imag;
+	double	x2;
+	double	y2;
+	double	x_new;
 
-	c_real = (f->x - SIZE / 2.0) * f->zoom / SIZE + f->shift_x;
-	c_imag = (f->y - SIZE / 2.0) * f->zoom / SIZE + f->shift_y;
 	x = 0.0;
 	y = 0.0;
 	f->i = 0;
-	while (x * x + y * y < (1 << 8) && f->i < f->max_iter)
+	while (f->i < f->max_iter)
 	{
-		temp = x * x - y * y + c_real;
-		y = 2.0 * x * y + c_imag;
-		if (x == temp && y == y)
-		{
-			f->i = f->max_iter;
+		x2 = x * x;
+		y2 = y * y;
+		if (x2 + y2 > 4.0)
 			break ;
-		}
-		x = temp;
+		x_new = x2 - y2 + f->real;
+		y = 2.0 * x * y + f->imag;
+		x = x_new;
 		f->i++;
 	}
 }
-
