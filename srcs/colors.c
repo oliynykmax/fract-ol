@@ -1,4 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 17:01:39 by maoliiny         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/fract-ol.h"
+
+int	get_rgba(int r, int g, int b, int a)
+{
+	return (r << 24 | g << 16 | b << 8 | a);
+}
 
 static void	classic_scheme(double t, int *r, int *g, int *b)
 {
@@ -23,24 +40,19 @@ static void	psychedelic_scheme(double t, int *r, int *g, int *b)
 
 void	apply_color_scheme(t_fractal *f, double t, int *color)
 {
-	int r, g, b;
-	t = t < 0 ? 0 : (t > 1 ? 1 : t);
-	switch (f->color_scheme)
-	{
-	case 0:
-		classic_scheme(t, &r, &g, &b);
-		break ;
-	case 1:
+	int	r;
+	int	g;
+	int	b;
+
+	t = fmin(fmax(t, 0.0), 1.0);
+	if (f->color_scheme == 1)
 		fire_scheme(t, &r, &g, &b);
-		break ;
-	case 3:
+	else if (f->color_scheme == 2)
 		psychedelic_scheme(t, &r, &g, &b);
-		break ;
-	default:
+	else
 		classic_scheme(t, &r, &g, &b);
-	}
-	r = r < 0 ? 0 : (r > 255 ? 255 : r);
-	g = g < 0 ? 0 : (g > 255 ? 255 : g);
-	b = b < 0 ? 0 : (b > 255 ? 255 : b);
+	r = (int)fmin(fmax(r, 0.0), 255.0);
+	g = (int)fmin(fmax(g, 0.0), 255.0);
+	b = (int)fmin(fmax(b, 0.0), 255.0);
 	*color = get_rgba(r, g, b, 255);
 }

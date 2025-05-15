@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 16:37:25 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:01:59 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,6 @@ void	my_scrollhook(double xdelta, double ydelta, void *param)
 		f->zoom *= 1.04;
 	else if (ydelta < 0)
 		f->zoom /= 1.04;
-}
-
-int	get_rgba(int r, int g, int b, int a)
-{
-	return (r << 24 | g << 16 | b << 8 | a);
 }
 
 void	calculate_julia(t_fractal *f)
@@ -179,7 +174,7 @@ void	ft_loop_hook(void *param)
 	if (mlx_is_key_down(f->mlx, MLX_KEY_LEFT))
 		move(MLX_KEY_LEFT, f);
 	if (mlx_is_key_down(f->mlx, MLX_KEY_C))
-		f->color_scheme = (f->color_scheme + 1) % 5;
+		f->color_scheme = (f->color_scheme + 1) % 3;
 	mlx_scroll_hook(f->mlx, &my_scrollhook, f);
 	ft_draw_fract(f);
 }
