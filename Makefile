@@ -6,7 +6,7 @@
 #    By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 19:29:32 by maoliiny          #+#    #+#              #
-#    Updated: 2025/05/15 16:14:13 by maoliiny         ###   ########.fr        #
+#    Updated: 2025/05/15 17:58:59 by maoliiny         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,11 @@ NAME = fract-ol
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = srcs/fract-ol.c srcs/colors.c
+SRCS = srcs/fractal.c srcs/colors.c srcs/utils.c
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -Iincl -Iassets/libft -Iassets/MLX42/include
-MLX42 = assets/MLX42/build/libmlx42.a
+MLX42 = assets/MLX42/build/libmlx42.a 
 .SECONDARY : MLX42
 all: $(MLX42) assets/libft/libft.a $(NAME)
 
@@ -37,7 +37,7 @@ assets/libft/libft.a:
 srcs/%.o: srcs/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-srcs/fract-ol.o: srcs/fract-ol.c incl/fract-ol.h
+srcs/fract-ol.o: srcs/fract-ol.c incl/fractal.h
 
 clean:
 	@rm -f $(OBJS)

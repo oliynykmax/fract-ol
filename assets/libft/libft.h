@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:53:10 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/06 11:10:50 by maoliiny         ###   LAUSANNE.ch       */
+/*   Updated: 2025/05/15 17:43:51 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,7 @@ size_t				ft_strlen(const char *s);
 int					ft_strcat(char **res, int fd);
 char				*ft_strjoin(char const *s1, char const *s2);
 void				*ft_memcpy(void *dest, const void *src, size_t n);
+
+double				ft_strtod(const char *str, char **endptr);
 
 #endif

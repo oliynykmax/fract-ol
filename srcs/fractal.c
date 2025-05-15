@@ -6,47 +6,11 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 17:01:59 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:55:02 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/fract-ol.h"
-
-void	print_exit_clean(t_fractal *f)
-{
-	free(f);
-	ft_printf("%s\n", EXIT_STR);
-	exit(EXIT_FAILURE);
-}
-
-void	is_valid_param(int ac, char **av, t_fractal *f)
-{
-	char	*end_ptr;
-
-	if (ac == 2)
-	{
-		if (ft_memcmp(av[1], "Mandelbrot", 10) == 0)
-			return ;
-		if (ft_memcmp(av[1], "Julia", 5) == 0)
-		{
-			f->julia_real = -0.4;
-			f->julia_imag = 0.6;
-			return ;
-		}
-		print_exit_clean(f);
-	}
-	if (ac == 4 && ft_memcmp(av[1], "Julia", 5) == 0)
-	{
-		f->julia_real = strtod(av[2], &end_ptr);
-		if (*end_ptr != '\0')
-			print_exit_clean(f);
-		f->julia_imag = strtod(av[3], &end_ptr);
-		if (*end_ptr != '\0')
-			print_exit_clean(f);
-		return ;
-	}
-	print_exit_clean(f);
-}
+#include "../incl/fractal.h"
 
 void	my_scrollhook(double xdelta, double ydelta, void *param)
 {
@@ -59,48 +23,6 @@ void	my_scrollhook(double xdelta, double ydelta, void *param)
 		f->zoom *= 1.04;
 	else if (ydelta < 0)
 		f->zoom /= 1.04;
-}
-
-void	calculate_julia(t_fractal *f)
-{
-	double	x_temp;
-	double	x;
-	double	y;
-
-	x = f->real;
-	y = f->imag;
-	f->i = 0;
-	while (f->i < f->max_iter)
-	{
-		x_temp = x * x - y * y + f->julia_real;
-		y = 2 * x * y + f->julia_imag;
-		x = x_temp;
-		if ((x * x + y * y) > 4.0)
-			break ;
-		f->i++;
-	}
-}
-
-void	calculate_mandelbrot(t_fractal *f)
-{
-	double			x_temp;
-	const double	c_real = f->real;
-	const double	c_imag = f->imag;
-	double			x;
-	double			y;
-
-	x = 0.0;
-	y = 0.0;
-	f->i = 0;
-	while (f->i < f->max_iter)
-	{
-		x_temp = x * x - y * y + c_real;
-		y = 2 * x * y + c_imag;
-		x = x_temp;
-		if ((x * x + y * y) > 4.0)
-			break ;
-		f->i++;
-	}
 }
 
 void	ft_draw_fract(t_fractal *f)
@@ -124,26 +46,11 @@ void	ft_draw_fract(t_fractal *f)
 	}
 }
 
-void	ft_put_pixel(t_fractal *f)
-{
-	int		color;
-	double	t;
-
-	if (f->i >= f->max_iter)
-		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
-	else
-	{
-		t = (double)f->i / f->max_iter;
-		apply_color_scheme(f, t, &color);
-		mlx_put_pixel(f->g_img, f->x, f->y, color);
-	}
-}
-
 void	move(int key, t_fractal *f)
 {
 	double	move_speed;
 
-	move_speed = 0.02 / f->zoom;
+	move_speed = 0.05 / f->zoom;
 	if (key == MLX_KEY_LEFT)
 		f->shift_x -= move_speed;
 	if (key == MLX_KEY_RIGHT)
@@ -198,7 +105,7 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	is_valid_param(ac, av, f);
 	f->f_type = &(av[1][0]);
-	f->max_iter = 30;
+	f->max_iter = 100;
 	f->zoom = 1.0;
 	f->shift_x = 0.0;
 	f->shift_y = 0.0;

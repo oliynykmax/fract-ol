@@ -6,11 +6,11 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 17:01:39 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:32:10 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/fract-ol.h"
+#include "../incl/fractal.h"
 
 int	get_rgba(int r, int g, int b, int a)
 {
