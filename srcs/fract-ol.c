@@ -6,53 +6,56 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 14:32:02 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:11:04 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/fract-ol.h"
 
-void is_valid_param(int ac, char** av, t_fractal* f)
+void	is_valid_param(int ac, char **av, t_fractal *f)
 {
+	char	*end_ptr;
+
 	if (ac == 2)
 	{
 		if (ft_memcmp(av[1], "Mandelbrot", 10) == 0)
-			return;
+			return ;
 		if (ft_memcmp(av[1], "Julia", 5) == 0)
 		{
-			f->julia_real = -0.4; // Default values if no parameters provided
+			f->julia_real = -0.4;
 			f->julia_imag = 0.6;
-			return;
+			return ;
 		}
+		free(f);
 		ft_printf("%s\n", EXIT_STR);
 		exit(EXIT_FAILURE);
 	}
 	if (ac == 4 && ft_memcmp(av[1], "Julia", 5) == 0)
 	{
-		// Convert string parameters to doubles
-		char* end_ptr;
 		f->julia_real = strtod(av[2], &end_ptr);
 		if (*end_ptr != '\0')
 		{
 			ft_printf("Invalid real parameter for Julia set\n");
+			free(f);
 			exit(EXIT_FAILURE);
 		}
 		f->julia_imag = strtod(av[3], &end_ptr);
 		if (*end_ptr != '\0')
 		{
+			free(f);
 			ft_printf("Invalid imaginary parameter for Julia set\n");
 			exit(EXIT_FAILURE);
 		}
-		return;
+		return ;
 	}
 	ft_printf("%s\n", EXIT_STR);
+	free(f);
 	exit(EXIT_FAILURE);
 }
 
-
-void my_scrollhook(double xdelta, double ydelta, void* param)
+void	my_scrollhook(double xdelta, double ydelta, void *param)
 {
-	t_fractal* f;
+	t_fractal	*f;
 
 	(void)xdelta;
 	(void)param;
@@ -63,16 +66,16 @@ void my_scrollhook(double xdelta, double ydelta, void* param)
 		f->zoom /= 1.04;
 }
 
-int get_rgba(int r, int g, int b, int a)
+int	get_rgba(int r, int g, int b, int a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void calculate_julia(t_fractal* f)
+void	calculate_julia(t_fractal *f)
 {
-	double x_temp;
-	double x;
-	double y;
+	double	x_temp;
+	double	x;
+	double	y;
 
 	x = f->real;
 	y = f->imag;
@@ -83,34 +86,34 @@ void calculate_julia(t_fractal* f)
 		y = 2 * x * y + f->julia_imag;
 		x = x_temp;
 		if ((x * x + y * y) > 4.0)
-			break;
+			break ;
 		f->i++;
 	}
 }
 
-
-void calculate_mandelbrot(t_fractal* f)
+void	calculate_mandelbrot(t_fractal *f)
 {
-	double x_temp;
-	double x = 0.0; // z_real starts at 0 for Mandelbrot
-	double y = 0.0; // z_imag starts at 0 for Mandelbrot
-	const double c_real = f->real;
-	const double c_imag = f->imag;
+	double			x_temp;
+	const double	c_real = f->real;
+	const double	c_imag = f->imag;
+	double			x;
+	double			y;
 
+	x = 0.0;
+	y = 0.0;
 	f->i = 0;
 	while (f->i < f->max_iter)
 	{
 		x_temp = x * x - y * y + c_real;
 		y = 2 * x * y + c_imag;
 		x = x_temp;
-
-		if ((x * x + y * y) > 4.0) // Check if |z|^2 > 4
-			break;
+		if ((x * x + y * y) > 4.0)
+			break ;
 		f->i++;
 	}
 }
 
-void ft_draw_fract(t_fractal* f)
+void	ft_draw_fract(t_fractal *f)
 {
 	f->y = 0;
 	while (f->y < SIZE)
@@ -131,13 +134,13 @@ void ft_draw_fract(t_fractal* f)
 	}
 }
 
-void ft_put_pixel(t_fractal* f)
+void	ft_put_pixel(t_fractal *f)
 {
-	int color;
-	double t;
-	int r;
-	int g;
-	int b;
+	int		color;
+	double	t;
+	int		r;
+	int		g;
+	int		b;
 
 	if (f->i >= f->max_iter)
 		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
@@ -152,9 +155,9 @@ void ft_put_pixel(t_fractal* f)
 	}
 }
 
-void move(int key, t_fractal* f)
+void	move(int key, t_fractal *f)
 {
-	double move_speed;
+	double	move_speed;
 
 	move_speed = 0.02 / f->zoom;
 	if (key == MLX_KEY_LEFT)
@@ -167,9 +170,9 @@ void move(int key, t_fractal* f)
 		f->shift_y += move_speed;
 }
 
-void ft_loop_hook(void* param)
+void	ft_loop_hook(void *param)
 {
-	t_fractal* f;
+	t_fractal	*f;
 
 	f = param;
 	if (mlx_is_key_down(f->mlx, MLX_KEY_ESCAPE))
@@ -198,7 +201,7 @@ void ft_loop_hook(void* param)
 	ft_draw_fract(f);
 }
 
-void init_screen(t_fractal* f)
+void	init_screen(t_fractal *f)
 {
 	f->mlx = mlx_init(SIZE, SIZE, f->f_type, 0);
 	f->g_img = mlx_new_image(f->mlx, SIZE, SIZE);
@@ -208,9 +211,9 @@ void init_screen(t_fractal* f)
 	mlx_terminate(f->mlx);
 }
 
-int main(int ac, char** av)
+int	main(int ac, char **av)
 {
-	t_fractal* f;
+	t_fractal	*f;
 
 	f = malloc(sizeof(t_fractal));
 	if (!f)
