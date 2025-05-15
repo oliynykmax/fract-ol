@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   fract-ol.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/12 18:32:16 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/13 16:30:43 by maoliiny         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "../incl/fract-ol.h"
 
@@ -38,15 +28,17 @@ void	is_valid_param(int ac, char **av)
 	exit(EXIT_FAILURE);
 }
 
-void my_scrollhook(double xdelta, double ydelta, void* param)
+void	my_scrollhook(double xdelta, double ydelta, void *param)
 {
-	(void)param;
-	t_fractal *f = param;
-	if (ydelta > 0)
-		f->zoom *=1.1;
-	else if (ydelta < 0)
-		f->zoom /=1.1;;
+	t_fractal	*f;
 
+	(void)param;
+	f = param;
+	if (ydelta > 0)
+		f->zoom *= 1.1;
+	else if (ydelta < 0)
+		f->zoom /= 1.1;
+	;
 	// Can also detect a mousewheel that goes along the X (e.g: MX Master 3)
 	if (xdelta < 0)
 		ft_printf("Sliiiide to the left!");
@@ -54,17 +46,18 @@ void my_scrollhook(double xdelta, double ydelta, void* param)
 		ft_printf("Sliiiide to the right!");
 }
 
-int get_rgba(int r, int g, int b, int a)
+int	get_rgba(int r, int g, int b, int a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void ft_put_pixel(t_fractal *f)
+void	ft_put_pixel(t_fractal *f)
 {
-	int     color;
+	int	color;
 
 	if (f->i >= f->max_iter)
-		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF); // Black for points in set
+		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
+			// Black for points in set
 	else
 	{
 		color = get_rgba(43, 104, 50, 255);
@@ -114,8 +107,7 @@ void	ft_loop_hook(void *param)
 	ft_draw_fract(f);
 }
 
-
-void init_screen(t_fractal *f)
+void	init_screen(t_fractal *f)
 {
 	f->mlx = mlx_init(SIZE, SIZE, f->f_type, 0);
 	f->g_img = mlx_new_image(f->mlx, SIZE, SIZE);
@@ -132,11 +124,11 @@ int	main(int ac, char **av)
 
 	f = malloc(sizeof(t_fractal));
 	if (!f)
-		return(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	is_valid_param(ac, av);
 	f->f_type = &(av[1][0]);
-	f->max_iter = 100;  // Default max iterations
-	f->zoom = 1;     // Default zoom level
+	f->max_iter = 100; // Default max iterations
+	f->zoom = 1;       // Default zoom level
 	init_screen(f);
 	free(f);
 }
