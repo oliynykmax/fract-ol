@@ -5,13 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-<<<<<<< HEAD
-/*   Created: 2025/05/15 12:30:27 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 12:30:35 by maoliiny         ###   LAUSANNE.ch       */
-=======
-/*   Created: 2025/05/15 12:50:16 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 13:03:11 by maoliiny         ###   ########.fr       */
->>>>>>> 58c4d2f (works Julia or whatever)
+/*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
+/*   Updated: 2025/05/15 13:41:36 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,10 +109,6 @@ void	ft_put_pixel(t_fractal *f)
 		mlx_put_pixel(f->g_img, f->x, f->y, 0x000000FF);
 	else
 	{
-<<<<<<< HEAD
-		// Modified coloring for better visibility
-=======
->>>>>>> 58c4d2f (works Julia or whatever)
 		t = (double)f->i / f->max_iter;
 		r = (int)(9 * t * 255);
 		g = (int)(15 * t * t * 255);
@@ -127,10 +118,6 @@ void	ft_put_pixel(t_fractal *f)
 	}
 }
 
-<<<<<<< HEAD
-void	ft_loop_hook(void *param)
-{
-=======
 void	move(int key, t_fractal *f)
 {
 	double	move_speed;
@@ -148,7 +135,6 @@ void	move(int key, t_fractal *f)
 
 void	ft_loop_hook(void *param)
 {
->>>>>>> 58c4d2f (works Julia or whatever)
 	t_fractal	*f;
 
 	f = param;
