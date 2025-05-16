@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 13:42:40 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:56:00 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,6 @@ static inline void	fire_scheme(double t, int *r, int *g, int *b)
 	*b = (int)(255 * pow(t, 4));
 }
 
-static inline void	psychedelic_scheme(double t, int *r, int *g, int *b)
-{
-	*r = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t)));
-	*g = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t + 2.094)));
-	*b = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t + 4.188)));
-}
-
 void	apply_color_scheme(t_fractal *f, double t, int *color)
 {
 	int	r;
@@ -50,8 +43,6 @@ void	apply_color_scheme(t_fractal *f, double t, int *color)
 	t = fmin(fmax(t, 0.0), 1.0);
 	if (f->color_scheme == 1)
 		fire_scheme(t, &r, &g, &b);
-	else if (f->color_scheme == 2)
-		psychedelic_scheme(t, &r, &g, &b);
 	else
 		classic_scheme(t, &r, &g, &b);
 	r = (int)fmin(fmax(r, 0.0), 255.0);

@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 18:54:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 13:58:50 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:08:46 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	f = param;
 	if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
 	{
-		f->color_scheme = (f->color_scheme + 1) % 3;
+		f->color_scheme = (f->color_scheme + 1) % 2;
 		ft_draw_fract(f);
 	}
 }
@@ -80,5 +80,18 @@ void	print_exit_clean(t_fractal *f)
 {
 	free(f);
 	ft_printf("%s\n", EXIT_STR);
+	exit(EXIT_FAILURE);
+}
+
+void	cleanup_and_exit(t_fractal *f, const char *error_msg)
+{
+	if (f)
+	{
+		if (f->mlx)
+			mlx_terminate(f->mlx);
+		free(f);
+	}
+	if (error_msg)
+		ft_printf("Error: %s\n", error_msg);
 	exit(EXIT_FAILURE);
 }
