@@ -6,15 +6,16 @@
 #    By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 19:29:32 by maoliiny          #+#    #+#              #
-#    Updated: 2025/05/16 12:04:09 by maoliiny         ###   ########.fr        #
+#    Updated: 2025/05/16 13:17:30 by maoliiny         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-NAME = fract-ol
+NAME = fractol
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -O3 -ffast-math -flto
+
+CFLAGS = -Wall -Wextra -Werror -O2 -ffast-math #-flto
 
 SRCS = srcs/fractal.c srcs/colors.c srcs/utils.c srcs/hooks.c
 OBJS = $(SRCS:.c=.o)

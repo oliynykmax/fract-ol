@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 12:06:14 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:09:25 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,18 @@ static void	handle_close(void *param)
 	mlx_close_window(f->mlx);
 }
 
-void	ft_draw_fract(t_fractal *f)
+void	ft_put_pixel(t_fractal *f)
 {
-	f->y = 0;
-	while (f->y < SIZE)
+	int		color;
+	double	t;
+
+	if (f->i >= f->max_iter)
+		mlx_put_pixel(f->g_img, f->x, f->y, 0x1A1A3AFF);
+	else
 	{
-		f->x = 0;
-		while (f->x < SIZE)
-		{
-			f->real = (2.0 * f->x - SIZE) / (f->zoom * SIZE) + f->shift_x;
-			f->imag = (2.0 * f->y - SIZE) / (f->zoom * SIZE) + f->shift_y;
-			if (ft_strncmp(f->f_type, "Julia", 5) == 0)
-				calculate_julia(f);
-			else if (ft_strncmp(f->f_type, "Mandelbrot", 10) == 0)
-				calculate_mandelbrot(f);
-			ft_put_pixel(f);
-			f->x++;
-		}
-		f->y++;
+		t = (double)f->i / f->max_iter;
+		apply_color_scheme(f, t, &color);
+		mlx_put_pixel(f->g_img, f->x, f->y, color);
 	}
 }
 
@@ -76,7 +70,7 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	is_valid_param(ac, av, f);
 	f->f_type = &(av[1][0]);
-	f->max_iter = 10;
+	f->max_iter = 30;
 	f->zoom = 0.5;
 	f->shift_x = 0.0;
 	f->shift_y = 0.0;

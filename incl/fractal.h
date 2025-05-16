@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:11:31 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 19:13:10 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:09:43 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,11 @@ void		init(t_fractal *f);
 void		ft_put_pixel(t_fractal *f);
 void		apply_color_scheme(t_fractal *f, double t, int *color);
 void		switch_color_scheme(t_fractal *f);
-int			get_rgba(int r, int g, int b, int a);
 void		apply_color_scheme(t_fractal *f, double t, int *color);
 /*utils*/
 void		is_valid_param(int ac, char **av, t_fractal *f);
 void		print_exit_clean(t_fractal *f);
 void		ft_put_pixel(t_fractal *f);
-void		calculate_julia(t_fractal *f);
-void		calculate_mandelbrot(t_fractal *f);
 
 void		ft_loop_hook(void *param);
 void		my_scrollhook(double xdelta, double ydelta, void *param);

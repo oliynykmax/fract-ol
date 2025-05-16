@@ -6,32 +6,39 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 18:49:00 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:46:12 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/fractal.h"
 
-int	get_rgba(int r, int g, int b, int a)
+static inline int	get_rgba(int r, int g, int b, int a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-static void	classic_scheme(double t, int *r, int *g, int *b)
+static inline void	classic_scheme(double t, int *r, int *g, int *b)
 {
-	*r = (int)(255 * t * t);
-	*g = (int)(255 * pow(1 - t, 2) * t);
-	*b = (int)(255 * (1 - t * t));
+	double	t2;
+	double	one_minus_t;
+	double	one_minus_t2;
+
+	t2 = t * t;
+	one_minus_t = 1.0 - t;
+	one_minus_t2 = one_minus_t * one_minus_t;
+	*r = (int)(255 * t2);
+	*g = (int)(255 * one_minus_t2 * t);
+	*b = (int)(255 * (1 - t2));
 }
 
-static void	fire_scheme(double t, int *r, int *g, int *b)
+static inline void	fire_scheme(double t, int *r, int *g, int *b)
 {
 	*r = (int)(255 * (1 - (1 - t) * (1 - t)));
 	*g = (int)(255 * t * t * (1 - t));
 	*b = (int)(255 * pow(t, 4));
 }
 
-static void	psychedelic_scheme(double t, int *r, int *g, int *b)
+static inline void	psychedelic_scheme(double t, int *r, int *g, int *b)
 {
 	*r = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t)));
 	*g = (int)(255 * (0.5 + 0.5 * sin(2 * M_PI * t + 2.094)));

@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 18:54:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 19:12:50 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:25:05 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,17 @@ void	my_scrollhook(double xdelta, double ydelta, void *param)
 	mouse_re = (x - SIZE / 2.0) / (f->zoom * SIZE / 2.0) + f->shift_x;
 	mouse_im = (y - SIZE / 2.0) / (f->zoom * SIZE / 2.0) + f->shift_y;
 	if (ydelta > 0)
+	{
 		f->zoom *= 1.1;
+		if (f->max_iter < 300)
+			f->max_iter += 1;
+	}
 	else
+	{
+		if (f->max_iter > 20)
+			f->max_iter -= 1;
 		f->zoom /= 1.1;
+	}
 	f->shift_x = mouse_re - (x - SIZE / 2.0) / (f->zoom * SIZE / 2.0);
 	f->shift_y = mouse_im - (y - SIZE / 2.0) / (f->zoom * SIZE / 2.0);
 }

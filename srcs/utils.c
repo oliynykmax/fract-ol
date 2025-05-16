@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:17:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/15 19:09:06 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:09:53 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,59 +48,67 @@ void	is_valid_param(int ac, char **av, t_fractal *f)
 	print_exit_clean(f);
 }
 
-void	ft_put_pixel(t_fractal *f)
-{
-	int		color;
-	double	t;
-
-	if (f->i >= f->max_iter)
-		mlx_put_pixel(f->g_img, f->x, f->y, 0x1A1A3AFF);
-	else
-	{
-		t = (double)f->i / f->max_iter;
-		apply_color_scheme(f, t, &color);
-		mlx_put_pixel(f->g_img, f->x, f->y, color);
-	}
-}
-
-void	calculate_julia(t_fractal *f)
+static inline void	calculate_julia(t_fractal *f)
 {
 	double	x;
 	double	y;
-	double	temp;
+	int		i;
+	double	x_new;
 
 	x = f->real;
 	y = f->imag;
-	f->i = 0;
-	while (x * x + y * y < (1 << 8) && f->i < f->max_iter)
+	i = 0;
+	while (i < f->max_iter)
 	{
-		temp = x * x - y * y + sin(f->julia_real);
-		y = 2.0 * x * y + cos(f->julia_imag);
-		x = temp;
-		f->i++;
+		x_new = x * x - y * y + f->julia_real;
+		y = 2.0 * x * y + f->julia_imag;
+		x = x_new;
+		if (x * x + y * y > 4.0)
+			break ;
+		i++;
 	}
+	f->i = i;
 }
 
-void	calculate_mandelbrot(t_fractal *f)
+static inline void	calculate_mandelbrot(t_fractal *f)
 {
 	double	x;
 	double	y;
-	double	x2;
-	double	y2;
+	int		i;
 	double	x_new;
 
 	x = 0.0;
 	y = 0.0;
-	f->i = 0;
-	while (f->i < f->max_iter)
+	i = 0;
+	while (i < f->max_iter)
 	{
-		x2 = x * x;
-		y2 = y * y;
-		if (x2 + y2 > 4.0)
-			break ;
-		x_new = x2 - y2 + f->real;
+		x_new = x * x - y * y + f->real;
 		y = 2.0 * x * y + f->imag;
 		x = x_new;
-		f->i++;
+		if (x * x + y * y > 4.0)
+			break ;
+		i++;
+	}
+	f->i = i;
+}
+
+void	ft_draw_fract(t_fractal *f)
+{
+	f->y = 0;
+	while (f->y < SIZE)
+	{
+		f->x = 0;
+		while (f->x < SIZE)
+		{
+			f->real = (2.0 * f->x - SIZE) / (f->zoom * SIZE) + f->shift_x;
+			f->imag = (2.0 * f->y - SIZE) / (f->zoom * SIZE) + f->shift_y;
+			if (ft_strncmp(f->f_type, "Julia", 5) == 0)
+				calculate_julia(f);
+			else if (ft_strncmp(f->f_type, "Mandelbrot", 10) == 0)
+				calculate_mandelbrot(f);
+			ft_put_pixel(f);
+			f->x++;
+		}
+		f->y++;
 	}
 }
