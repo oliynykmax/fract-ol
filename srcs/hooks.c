@@ -6,11 +6,23 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 18:54:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 13:25:05 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:58:50 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/fractal.h"
+
+void	key_hook(mlx_key_data_t keydata, void *param)
+{
+	t_fractal	*f;
+
+	f = param;
+	if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
+	{
+		f->color_scheme = (f->color_scheme + 1) % 3;
+		ft_draw_fract(f);
+	}
+}
 
 void	my_scrollhook(double xdelta, double ydelta, void *param)
 {
@@ -60,8 +72,13 @@ void	ft_loop_hook(void *param)
 		move(MLX_KEY_RIGHT, f);
 	if (mlx_is_key_down(f->mlx, MLX_KEY_LEFT))
 		move(MLX_KEY_LEFT, f);
-	if (mlx_is_key_down(f->mlx, MLX_KEY_C))
-		f->color_scheme = (f->color_scheme + 1) % 3;
 	mlx_scroll_hook(f->mlx, &my_scrollhook, f);
 	ft_draw_fract(f);
+}
+
+void	print_exit_clean(t_fractal *f)
+{
+	free(f);
+	ft_printf("%s\n", EXIT_STR);
+	exit(EXIT_FAILURE);
 }

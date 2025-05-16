@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:11:31 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 13:09:43 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:03:25 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@
 ./fractol Mandelbrot\n\
 ./fractol Julia\n\
 ./fractol Julia <real> <imaginary>\n\
+./fractol Burn\n\
 Example: ./fractol Julia -0.4 0.6"
-# define SIZE 700
+# define SIZE 500
 
 typedef struct s_color
 {
@@ -63,6 +64,7 @@ void		ft_put_pixel(t_fractal *f);
 
 void		ft_loop_hook(void *param);
 void		my_scrollhook(double xdelta, double ydelta, void *param);
+void		key_hook(mlx_key_data_t keydata, void *param);
 void		ft_draw_fract(t_fractal *f);
 void		move(int key, t_fractal *f);
 

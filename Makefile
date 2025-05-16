@@ -6,7 +6,7 @@
 #    By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 19:29:32 by maoliiny          #+#    #+#              #
-#    Updated: 2025/05/16 13:17:30 by maoliiny         ###   ########.fr        #
+#    Updated: 2025/05/16 13:41:25 by maoliiny         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = fractol
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -O2 -ffast-math #-flto
+CFLAGS = -Wall -Wextra -Werror -O3 -march=native -ffast-math
 
 SRCS = srcs/fractal.c srcs/colors.c srcs/utils.c srcs/hooks.c
 OBJS = $(SRCS:.c=.o)

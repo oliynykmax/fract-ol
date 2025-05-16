@@ -6,17 +6,32 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:17:52 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 13:09:53 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:02:28 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/fractal.h"
 
-void	print_exit_clean(t_fractal *f)
+static inline void	calculate_burning_ship(t_fractal *f)
 {
-	free(f);
-	ft_printf("%s\n", EXIT_STR);
-	exit(EXIT_FAILURE);
+	double	x;
+	double	y;
+	int		i;
+	double	x_new;
+
+	x = 0.0;
+	y = 0.0;
+	i = 0;
+	while (i < f->max_iter)
+	{
+		x_new = x * x - y * y + f->real;
+		y = fabs(2.0 * x * y) + f->imag;
+		x = x_new;
+		if (x * x + y * y > 4.0)
+			break ;
+		i++;
+	}
+	f->i = i;
 }
 
 void	is_valid_param(int ac, char **av, t_fractal *f)
@@ -25,14 +40,11 @@ void	is_valid_param(int ac, char **av, t_fractal *f)
 
 	if (ac == 2)
 	{
-		if (ft_memcmp(av[1], "Mandelbrot", 10) == 0)
+		if (ft_memcmp(av[1], "Mandelbrot", 10) == 0 || (ft_memcmp(av[1], "Burn",
+					4) == 0))
 			return ;
 		if (ft_memcmp(av[1], "Julia", 5) == 0)
-		{
-			f->julia_real = -0.2;
-			f->julia_imag = 0.652;
 			return ;
-		}
 		print_exit_clean(f);
 	}
 	if (ac == 4 && ft_memcmp(av[1], "Julia", 5) == 0)
@@ -106,6 +118,8 @@ void	ft_draw_fract(t_fractal *f)
 				calculate_julia(f);
 			else if (ft_strncmp(f->f_type, "Mandelbrot", 10) == 0)
 				calculate_mandelbrot(f);
+			else if (ft_strncmp(f->f_type, "Burn", 4) == 0)
+				calculate_burning_ship(f);
 			ft_put_pixel(f);
 			f->x++;
 		}

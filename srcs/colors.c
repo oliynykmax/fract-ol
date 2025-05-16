@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:59:12 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 12:46:12 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:42:40 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,12 @@ static inline int	get_rgba(int r, int g, int b, int a)
 
 static inline void	classic_scheme(double t, int *r, int *g, int *b)
 {
-	double	t2;
-	double	one_minus_t;
-	double	one_minus_t2;
+	double	freq;
 
-	t2 = t * t;
-	one_minus_t = 1.0 - t;
-	one_minus_t2 = one_minus_t * one_minus_t;
-	*r = (int)(255 * t2);
-	*g = (int)(255 * one_minus_t2 * t);
-	*b = (int)(255 * (1 - t2));
+	freq = 2.0 * M_PI;
+	*r = (int)(127.5 * (1 + sin(freq * t + 0.0)));
+	*g = (int)(127.5 * (1 + sin(freq * t + 2.0)));
+	*b = (int)(127.5 * (1 + sin(freq * t + 4.0)));
 }
 
 static inline void	fire_scheme(double t, int *r, int *g, int *b)

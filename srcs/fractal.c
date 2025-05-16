@@ -6,7 +6,7 @@
 /*   By: maoliiny <maoliiny@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:41:18 by maoliiny          #+#    #+#             */
-/*   Updated: 2025/05/16 13:09:25 by maoliiny         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:02:14 by maoliiny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	init_screen(t_fractal *f)
 	f->g_img = mlx_new_image(f->mlx, SIZE, SIZE);
 	mlx_image_to_window(f->mlx, f->g_img, 0, 0);
 	mlx_close_hook(f->mlx, &handle_close, f);
+	mlx_key_hook(f->mlx, &key_hook, f);
 	mlx_loop_hook(f->mlx, &ft_loop_hook, f);
 	mlx_loop(f->mlx);
 	mlx_terminate(f->mlx);
@@ -68,6 +69,8 @@ int	main(int ac, char **av)
 	f = malloc(sizeof(t_fractal));
 	if (!f)
 		return (EXIT_FAILURE);
+	f->julia_real = -0.2;
+	f->julia_imag = 0.652;
 	is_valid_param(ac, av, f);
 	f->f_type = &(av[1][0]);
 	f->max_iter = 30;
